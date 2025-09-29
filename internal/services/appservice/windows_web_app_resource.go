@@ -300,7 +300,7 @@ func (r WindowsWebAppResource) Create() sdk.ResourceFunc {
 			sc := webApp.SiteConfig[0]
 
 			availabilityRequest := resourceproviders.ResourceNameAvailabilityRequest{
-				Name: (webApp.Name),
+				Name: webApp.Name,
 				Type: resourceproviders.CheckNameResourceTypesMicrosoftPointWebSites,
 			}
 
@@ -969,13 +969,20 @@ func (r WindowsWebAppResource) Update() sdk.ResourceFunc {
 				authUpdate := helpers.ExpandAuthSettings(state.AuthSettings)
 				if authUpdate.Properties == nil {
 					authUpdate.Properties = &webapps.SiteAuthSettingsProperties{
+						// TODO externalize in common func for reuse between webapp/webapp slot/windows/linux etc
 						Enabled:                           pointer.To(false),
+						AdditionalLoginParams:             pointer.To(make([]string, 0)),
+						AllowedAudiences:                  pointer.To(make([]string, 0)),
+						ClientId:                          pointer.To(""),
 						ClientSecret:                      pointer.To(""),
 						ClientSecretSettingName:           pointer.To(""),
 						ClientSecretCertificateThumbprint: pointer.To(""),
 						GoogleClientSecret:                pointer.To(""),
+						FacebookAppId:                     pointer.To(""),
 						FacebookAppSecret:                 pointer.To(""),
+						FacebookOAuthScopes:               pointer.To(make([]string, 0)),
 						GitHubClientSecret:                pointer.To(""),
+						Issuer:                            pointer.To(""),
 						TwitterConsumerSecret:             pointer.To(""),
 						MicrosoftAccountClientSecret:      pointer.To(""),
 					}
